@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cstdlib>
 #include <climits>
+#include <hpdf_types.h>
 #include <locale>
 #include <math.h>
 #include <stdlib.h>
@@ -10,13 +11,20 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstring>
 #include <utility>
 #include <vector>
 #include <sstream>
+#include <hpdf.h>
 using namespace std;
 
 ifstream fin;
 ofstream fout;
+
+void error_handler (HPDF_STATUS error_no, HPDF_STATUS detail_no, void *user_data) {
+    cerr <<"error! "<<hex<<error_no<<" "<<detail_no<< '\n';
+    throw std::exception();
+}
 
 //----------Common functions/algorithms----------
 
@@ -71,8 +79,7 @@ int selectNum(int lBound,int hBound){
         validate(n);
         if(n<lBound or n>hBound) cout<<"Invalid option!\n";
     }while(n<lBound or n>hBound);
-    cin.clear();
-    cin.ignore(INT_MAX,'\n');
+    cin.ignore();
     return n;
 }
 
@@ -95,7 +102,7 @@ bool validateVector(vector<string> vec1,vector<string> vec2){
 }
 
 void listVector(vector<string> vec){
-    for(auto a:vec) cout<<"\n-"<<a<<"\n";
+    for(auto a:vec) cout<<"# "<<a<<"\n";
 }
 
 bool yN(){
@@ -106,9 +113,10 @@ bool yN(){
     c=tolower(c);
     if(c=='y') return 1;
     if(c=='n') return 0;
-    return 0;
     cin.clear();
     cin.ignore(INT_MAX,'\n');
+    cout<<"Invalid option!\n";
+    return yN();
 }
 
 //Password encryption
@@ -291,11 +299,12 @@ struct room{
         cout<<"\nRoom Number: "<<num;
         cout<<"\nAddress: "<<address;
         cout<<"\nType: "<<type;
-        cout<<"\nPrice: "<<price;
+        cout<<"\nPrice: "<<price<<"$";
         if(hasAdditionalFeatures()){
             cout<<"\nAdditional features:";
             listVector(additionalFeatures);
         }
+        cout<<"\n";
     }
 };
 
@@ -429,6 +438,17 @@ void sortRooms(){
     delete [] prices;
 }
 
+void sortRes(){
+    size_t s=resVec.size();
+    double* prices=new double[s];
+    for(size_t i=0;i<s;i++){
+        prices[i]=resVec[i].r->price;
+    }
+    compSort(prices,s);
+    for(size_t i=0;i<s;i++) swapT(resVec[i],resVec[findT(prices,s,resVec[i].r->price)]);
+    delete [] prices;
+}
+
 date inputDate(){
     date dat;
     cout<<"Year\n";
@@ -461,9 +481,54 @@ int compDate(date da, date db){
 }
 
 double total(reservation res){
+    const float tva=0.11;
     date s=res.start,e=res.end;
-    int days=(e.y-s.y)*365.25+(e.m-s.m)*30.4375+(e.d-s.d);
-    return days*res.r->price;
+    int days=(e.y-s.y)*365.25+(e.m-s.m)*30.43+(e.d-s.d);
+    double total=days*res.r->price;
+    return total+total*tva;
+}
+
+void exportTotal(user* u){
+    string titleStr=u->fName+" "+u->lName;
+    char* title=new char[titleStr.length()+1];
+    strcpy(title,titleStr.c_str());
+    HPDF_Doc pdf=HPDF_New(error_handler,NULL);
+    HPDF_Page page=HPDF_AddPage(pdf);
+    HPDF_REAL height=HPDF_Page_GetHeight(page);
+    HPDF_REAL width=HPDF_Page_GetWidth(page);
+    HPDF_Font font=HPDF_GetFont(pdf,"Helvetica",NULL);
+    HPDF_Page_SetFontAndSize(page,font,24);
+    HPDF_Page_BeginText(page);
+    HPDF_REAL tw=HPDF_Page_TextWidth(page,title);
+    HPDF_Page_TextOut(page,(width-tw)/2,height-50,title);
+    delete [] title;
+    HPDF_Page_EndText(page);
+    HPDF_Page_BeginText(page);
+    HPDF_Page_SetFontAndSize(page,font,18);
+    HPDF_Page_MoveTextPos(page,50,height-100);
+    for(auto res:resVec){
+        if(res.u==u){
+            string tempStr="Room no: "+to_string(res.r->num);
+            char temp[256];
+            strcpy(temp,tempStr.c_str());
+            HPDF_Page_ShowText(page,temp);
+            HPDF_Page_MoveTextPos(page,0,-20);
+            tempStr="From "+res.start.info()+" to "+res.end.info();
+            strcpy(temp,tempStr.c_str());
+            HPDF_Page_ShowText(page,temp);
+            HPDF_Page_MoveTextPos(page,0,-20);
+            tempStr="Total: "+to_string(total(res))+"$";
+            strcpy(temp,tempStr.c_str());
+            HPDF_Page_ShowText(page,temp);
+            HPDF_Page_MoveTextPos(page,0,-50);
+        }
+    }
+    HPDF_Page_EndText(page);
+    titleStr+=".pdf";
+    title=new char[titleStr.length()+1];
+    strcpy(title,titleStr.c_str());
+    HPDF_SaveToFile(pdf,title);
+    HPDF_Free(pdf);
 }
 
 //----------Add entry----------
@@ -593,17 +658,16 @@ void addReservation(user* u){
 //----------Pull from files----------
 
 void pullToSVec(string file,vector<string>& vec){
-    fin.ignore();
     size_t s=fileSize(file);
     if(!s)return;
     fin.open(file);
     string line;
     while(getline(fin,line)) vec.push_back(line);
+    fin.ignore();
     fin.close();
 }
 
 void pullRooms(){
-    fin.ignore();
     size_t s=fileSize("data/room.csv");
     if(!s)return;
     fin.open("data/room.csv");
@@ -620,11 +684,11 @@ void pullRooms(){
         if(getline(s,temp,'\n'))vectorizeString(temp,r.additionalFeatures);;
         rVec.push_back(r);
     }
+    fin.ignore();
     fin.close();
 }
 
 void pullUsers(){
-    fin.ignore();
     size_t s=fileSize("data/user.csv");
     if(!s)return;
     fin.open("data/user.csv");
@@ -640,11 +704,11 @@ void pullUsers(){
         getline(fin,u.num,'\n');
         uVec.push_back(u);
     }
+    fin.ignore();
     fin.close();
 }
 
 void pullReservations(){
-    fin.ignore();
     size_t s=fileSize("data/reservation.csv");
     if(!s)return;
     fin.open("data/reservation.csv");
@@ -662,6 +726,7 @@ void pullReservations(){
         res.end.input(temp);
         resVec.push_back(res);
     }
+    fin.ignore();
     fin.close();
 }
 
@@ -706,6 +771,8 @@ void pushUsers(){
 }
 
 void pushReservations(){
+    if(!resVec.size())return;
+    sortRes();
     fout.open("data/reservation.csv");
     for(auto res:resVec){
         fout<<res.r->num<<","<<res.u->ID<<","<<res.start.info()<<","<<res.end.info()<<"\n";
@@ -790,6 +857,7 @@ void deleteRoom(){
 //----------Edit entries----------
 
 void editRoom(room* r){
+    r->additionalFeatures.clear();
     cout<<"Type\n";
     r->type=types[selectChoice(&types[0],types.size())-1];
     cout<<"Price\n";
@@ -942,6 +1010,7 @@ void clientMenu(user*& u){
             cout<<"New Password\n";
             u->password=getPass();
         case 4:
+            exportTotal(u);
             u=nullptr;
             return;
         default:
