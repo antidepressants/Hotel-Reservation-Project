@@ -9,6 +9,12 @@ void error_handler (HPDF_STATUS error_no, HPDF_STATUS detail_no, void *user_data
 }
 
 void exportTotal(user* u){
+    bool cont=0;
+    for(auto res:resVec)if(res.u==u){
+        cont=1;
+        break;
+    }
+    if(!cont) return;
     string titleStr=u->fName+" "+u->lName;
     char* title=new char[titleStr.length()+1];
     strcpy(title,titleStr.c_str());
@@ -44,7 +50,7 @@ void exportTotal(user* u){
         }
     }
     HPDF_Page_EndText(page);
-    titleStr="../data/output/"+titleStr+".pdf";
+    titleStr="data/output/"+titleStr+".pdf";
     title=new char[titleStr.length()+1];
     strcpy(title,titleStr.c_str());
     HPDF_SaveToFile(pdf,title);

@@ -1,4 +1,5 @@
 #include "dbops.h"
+#include "globalvariables.h"
 #include <fstream>
 using namespace std;
 
@@ -149,7 +150,8 @@ void addRoom(){
 void addUser(){
     cout<<"\nAccount Creation\n";
     user u;
-    u.ID=max("../data/user.csv")+1;
+    size_t s=fileSize("data/user.csv");
+    u.ID=(s)?max("data/user.csv")+1:1;
     cout<<"First Name\n";
     u.fName=validateName();
     cout<<"Last Name\n";
@@ -248,9 +250,9 @@ void pullToSVec(string file,vector<string>& vec){
 }
 
 void pullRooms(){
-    size_t s=fileSize("../data/room.csv");
+    size_t s=fileSize("data/room.csv");
     if(!s)return;
-    fin.open("../data/room.csv");
+    fin.open("data/room.csv");
     string temp;
     while(getline(fin,temp)){
         stringstream s(temp);
@@ -269,9 +271,9 @@ void pullRooms(){
 }
 
 void pullUsers(){
-    size_t s=fileSize("../data/user.csv");
+    size_t s=fileSize("data/user.csv");
     if(!s)return;
-    fin.open("../data/user.csv");
+    fin.open("data/user.csv");
     for(size_t i=0;i<s;i++){
         string temp;
         user u;
@@ -289,9 +291,9 @@ void pullUsers(){
 }
 
 void pullReservations(){
-    size_t s=fileSize("../data/reservation.csv");
+    size_t s=fileSize("data/reservation.csv");
     if(!s)return;
-    fin.open("../data/reservation.csv");
+    fin.open("data/reservation.csv");
     for(size_t i=0;i<s;i++){
         string temp;
         getline(fin,temp,',');
@@ -311,9 +313,9 @@ void pullReservations(){
 }
 
 void pullAll(){
-    pullToSVec("../data/features.csv",features);
-    pullToSVec("../data/locations.csv",locations);
-    pullToSVec("../data/types.csv", types);
+    pullToSVec("data/features.csv",features);
+    pullToSVec("data/locations.csv",locations);
+    pullToSVec("data/types.csv", types);
     pullRooms();
     pullUsers();
     pullReservations();
@@ -330,7 +332,7 @@ void pushFromVec(string file,vector<string> vec){
 void pushRooms(){
     if(!rVec.size())return;
     sortRooms();
-    fout.open("../data/room.csv");
+    fout.open("data/room.csv");
     for(auto r:rVec){
         fout<<r.num<<","<<r.address<<","<<r.type<<","<<r.price<<"$";
         if(r.hasAdditionalFeatures()){
@@ -342,7 +344,7 @@ void pushRooms(){
 }
 
 void pushUsers(){
-    fout.open("../data/user.csv");
+    fout.open("data/user.csv");
     for(auto u:uVec){
         fout<<u.ID<<","<<u.fName<<","<<u.lName<<","<<u.password<<","<<u.address<<","<<u.num<<"\n";
     }
@@ -352,7 +354,7 @@ void pushUsers(){
 void pushReservations(){
     if(!resVec.size())return;
     sortRes();
-    fout.open("../data/reservation.csv");
+    fout.open("data/reservation.csv");
     for(auto res:resVec){
         fout<<res.r->num<<","<<res.u->ID<<","<<res.start.info()<<","<<res.end.info()<<"\n";
     }
@@ -360,15 +362,16 @@ void pushReservations(){
 }
 
 void pushAll(){
-    pushFromVec("../data/features.csv",features);
-    pushFromVec("../data/locations.csv",locations);
-    pushFromVec("../data/types.csv",types);
+    pushFromVec("data/features.csv",features);
+    pushFromVec("data/locations.csv",locations);
+    pushFromVec("data/types.csv",types);
     pushRooms();
     pushUsers();
     pushReservations();
 }
 
 void sync(){
+    for(auto u:uVec)u.displayInfo();
     pushAll();
     features.clear();
     locations.clear();

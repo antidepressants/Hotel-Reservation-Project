@@ -7,10 +7,10 @@ user* login(){
     string email=validateEmail();
     user* target=findEmail(email);
     if(target==nullptr) {
-        cout<<"No account associated with this email found!";
+        cout<<"No account associated with this email found!\n";
         return nullptr;
     }
-    cout<<"\nPassword\n";
+    cout<<"Password\n";
     string pass=getPass();
     if(!target->password.compare(pass)){
         cout<<"Login successful!\n";
@@ -154,19 +154,19 @@ void clientMenu(user*& u){
 void firstSetup(){
     cout<<"No Data Found; Entering first-time setup...\n";
     cout<<"Creating files...\n";
-    fout.open("../data/room.csv");
+    fout.open("data/room.csv");
     fout.close();
-    fout.open("../data/user.csv");
+    fout.open("data/user.csv");
     fout.close();
-    fout.open("../data/reservation.csv");
+    fout.open("data/reservation.csv");
     fout.close();
-    fout.open("../data/features.csv");
+    fout.open("data/features.csv");
     fout.close();
-    fout.open("../data/locations.csv");
+    fout.open("data/locations.csv");
     fout.close();
-    fout.open("../data/types.csv");
+    fout.open("data/types.csv");
     fout.close();
-    cout<<"Craeted files.\n";
+    cout<<"Created files.\n";
     cout<<"Create admin user:\n";
     addUser();
     locations={"Beirut","Jbeil","Baalbek","Zahleh","Tyr","Tripoli"};
@@ -175,9 +175,8 @@ void firstSetup(){
 
 void start(){
     system("clear");
-    string file="../data/user.csv";
     cout<<"Loading data...\n";
-    size_t s=fileSize(file);
+    size_t s=fileSize("data/user.csv");
     if(!s) firstSetup();
     else pullAll();
     cout<<"Loaded data.\n";
