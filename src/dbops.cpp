@@ -24,35 +24,47 @@ size_t max(string file){
 }
 
 room* findRoom(unsigned int rnum){
+    room* p=nullptr;
     for(auto& a:rVec){
-        room* p=&a;
-        if(p->num==rnum)return p;
+        if(p->num==rnum){
+            p=&a;
+            break;
+        }
     }
-    return nullptr;
+    return p;
 }
 
 user* findUID(unsigned int uID){
+    user* p=nullptr;
     for(auto& a:uVec){
-        user* p=&a;
-        if(p->ID==uID)return p;
+        if(p->ID==uID){
+            p=&a;
+            break;
+        }
     }
-    return nullptr;
+    return p;
 }
 
 user* findEmail(string email){
+    user*p=nullptr;
     for(auto& a:uVec){
-        user* p=&a;
-        if(!p->address.compare(email)) return p;
+        if(!p->address.compare(email)){
+            p=&a;
+            break;
+        }
     }
-    return nullptr;
+    return p;
 }
 
 reservation* findRes(unsigned int uID,unsigned int rNum){
+    reservation* p=nullptr;
     for(auto& a:resVec){
-        reservation* p=&a;
-        if(p->u->ID==uID && p->r->num==rNum) return p;
+        if(p->u->ID==uID && p->r->num==rNum){
+            p=&a;
+            break;
+        }
     }
-    return nullptr;
+    return p;
 }
 
 int findString(string* arr,size_t s,string target){

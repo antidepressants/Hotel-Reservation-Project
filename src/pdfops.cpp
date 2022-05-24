@@ -19,6 +19,7 @@ void exportTotal(user* u){
     char* title=new char[titleStr.length()+1];
     strcpy(title,titleStr.c_str());
     HPDF_Doc pdf=HPDF_New(error_handler,NULL);
+    if(!pdf)return;
     HPDF_Page page=HPDF_AddPage(pdf);
     HPDF_REAL height=HPDF_Page_GetHeight(page);
     HPDF_REAL width=HPDF_Page_GetWidth(page);

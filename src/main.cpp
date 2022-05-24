@@ -1,4 +1,5 @@
 #include "cli.h"
+#include <cstdlib>
 using namespace std;
 
 int main(){
@@ -16,6 +17,7 @@ int main(){
             addUser();
             break;
         case 3:
+            delete up;
             system("clear");
             return 0;
         }
@@ -25,6 +27,10 @@ int main(){
         cin.ignore(INT_MAX,'\n');
         getline(cin,temp);
         sync();
+        if(!fout) {
+            cerr<<"Error writing to file!\n";
+            return EXIT_FAILURE;
+        }
         while(up){
             system("clear");
             if(up->ID==1) adminMenu(up);
