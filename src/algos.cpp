@@ -23,6 +23,7 @@ bool validateVector(vector<string> vec1,vector<string> vec2){
 }
 
 void listVector(vector<string> vec){
+    cout<<"\n";
     for(auto a:vec) cout<<"# "<<a<<"\n";
 }
 
