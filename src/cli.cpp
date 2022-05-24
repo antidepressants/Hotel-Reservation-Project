@@ -1,4 +1,5 @@
 #include "cli.h"
+#include "globalvariables.h"
 using namespace std;
 
 user* login(){
@@ -75,6 +76,11 @@ void adminMenu(user*& u){
             removeFromVector(types);
             break;
         case 9:
+            if(!rVec.size()){
+                cout<<"There are no Rooms!\n";
+                break;
+            }
+            for(auto r:rVec)r.displayInfo();
             deleteRoom();
             break;
         case 10:

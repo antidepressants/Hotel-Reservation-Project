@@ -10,12 +10,19 @@ void error_handler (HPDF_STATUS error_no, HPDF_STATUS detail_no, void *user_data
 
 void exportTotal(user* u){
     bool cont=0;
+    string titleStr=u->fName+" "+u->lName;
     for(auto res:resVec)if(res.u==u){
         cont=1;
         break;
     }
-    if(!cont) return;
-    string titleStr=u->fName+" "+u->lName;
+    if(!cont) {
+        string tempStr="data/output/"+titleStr+".pdf";
+        char* temp=new char[tempStr.length()];
+        strcpy(temp,tempStr.c_str());
+        remove(temp);
+        delete [] temp;
+        return;
+    } 
     char* title=new char[titleStr.length()+1];
     strcpy(title,titleStr.c_str());
     HPDF_Doc pdf=HPDF_New(error_handler,NULL);

@@ -325,13 +325,22 @@ void pullAll(){
 //----------Push to files----------
 
 void pushFromVec(string file,vector<string> vec){
+    if(!vec.size()){
+        fout.open(file);
+        fout.close();
+        return;
+    }
     fout.open(file);
     for(auto a:vec) fout<<a<<"\n";
     fout.close();
 }
 
 void pushRooms(){
-    if(!rVec.size())return;
+    if(!rVec.size()){
+        fout.open("data/room.csv");
+        fout.close();
+        return;
+    }
     sortRooms();
     fout.open("data/room.csv");
     for(auto r:rVec){
@@ -353,7 +362,11 @@ void pushUsers(){
 }
 
 void pushReservations(){
-    if(!resVec.size())return;
+    if(!resVec.size()){
+        fout.open("data/reservation.csv");
+        fout.close();
+        return;
+    }
     sortRes();
     fout.open("data/reservation.csv");
     for(auto res:resVec){
