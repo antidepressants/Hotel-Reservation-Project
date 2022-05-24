@@ -135,6 +135,7 @@ void clientMenu(user*& u){
         case 3:
             cout<<"New Password\n";
             u->password=getPass();
+            break;
         case 4:
             exportTotal(u);
             u=nullptr;
@@ -174,7 +175,7 @@ void firstSetup(){
 }
 
 void start(){
-    system("clear");
+    (windows)?system("cls"):system("clear");
     cout<<"Loading data...\n";
     size_t s=fileSize("data/user.csv");
     if(!s) firstSetup();

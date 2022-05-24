@@ -1,5 +1,10 @@
 #include "globalvariables.h"
 
+bool windows=0;
+#ifdef _WIN32
+windows=1;
+#endif
+
 std::ifstream fin;
 std::ofstream fout;
 

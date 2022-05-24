@@ -2,6 +2,8 @@
 #include "classes.h"
 #include <fstream>
 
+extern bool windows;
+
 extern std::ifstream fin;
 extern std::ofstream fout;
 

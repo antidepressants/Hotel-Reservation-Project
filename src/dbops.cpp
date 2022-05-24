@@ -1,4 +1,5 @@
 #include "dbops.h"
+#include "classes.h"
 #include "globalvariables.h"
 #include <fstream>
 using namespace std;
@@ -24,47 +25,35 @@ size_t max(string file){
 }
 
 room* findRoom(unsigned int rnum){
-    room* p=nullptr;
     for(auto& a:rVec){
-        if(p->num==rnum){
-            p=&a;
-            break;
-        }
+        room* p=&a;
+        if(p->num==rnum)return p;
     }
-    return p;
+    return nullptr;
 }
 
 user* findUID(unsigned int uID){
-    user* p=nullptr;
     for(auto& a:uVec){
-        if(p->ID==uID){
-            p=&a;
-            break;
-        }
+        user* p=&a;
+        if(p->ID==uID)return p;
     }
-    return p;
+    return nullptr;
 }
 
 user* findEmail(string email){
-    user*p=nullptr;
     for(auto& a:uVec){
-        if(!p->address.compare(email)){
-            p=&a;
-            break;
-        }
+        user* p=&a;
+        if(!p->address.compare(email))return p;
     }
-    return p;
+    return nullptr;
 }
 
 reservation* findRes(unsigned int uID,unsigned int rNum){
-    reservation* p=nullptr;
     for(auto& a:resVec){
-        if(p->u->ID==uID && p->r->num==rNum){
-            p=&a;
-            break;
-        }
+        reservation* p=&a;
+        if(p->u->ID==uID && p->r->num==rNum)return p;
     }
-    return p;
+    return nullptr;
 }
 
 int findString(string* arr,size_t s,string target){
@@ -383,7 +372,6 @@ void pushAll(){
 }
 
 void sync(){
-    for(auto u:uVec)u.displayInfo();
     pushAll();
     features.clear();
     locations.clear();

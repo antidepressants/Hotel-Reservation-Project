@@ -7,7 +7,7 @@ int main(){
     string loginChoices[]={"Login","Register","Quit"};
     user* up=nullptr;
     while(true){
-        system("clear");
+        (windows)?system("cls"):system("clear");
         cout<<"\n-----Main Menu-----\n";
         switch (selectChoice(loginChoices,3)) {
         case 1:
@@ -17,8 +17,7 @@ int main(){
             addUser();
             break;
         case 3:
-            delete up;
-            system("clear");
+            (windows)?system("cls"):system("clear");
             return 0;
         }
         cout<<"\nPress enter to continue...";
@@ -32,7 +31,7 @@ int main(){
             return EXIT_FAILURE;
         }
         while(up){
-            system("clear");
+            (windows)?system("cls"):system("clear");
             if(up->ID==1) adminMenu(up);
             else clientMenu(up);
         }
