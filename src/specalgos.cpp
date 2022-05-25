@@ -12,6 +12,11 @@ string validateEmail(){
         int dotpos = domain.find(".");
         if(dotpos!=string::npos && dotpos!=0 && dotpos!=domain.length()-1) valid=1;
     }
+    char illegal[]="',<>/{}()*&^%$#!-+=`~|\'\"\\";
+    for(auto c:illegal) if(email.find(c)!=string::npos){
+        valid=0;
+        break;
+    }
     if(valid==0){
         cout<<"Invalid Email!\n";
         return validateEmail();
