@@ -7,8 +7,8 @@ int selectNum(int lBound,int hBound){
     int n;
     do{
         validate(n);
-        if(n<lBound or n>hBound) cout<<"Invalid option!\n";
-    }while(n<lBound or n>hBound);
+        if(n<lBound || n>hBound) cout<<"Invalid option!\n";
+    }while(n<lBound || n>hBound);
     cin.ignore();
     return n;
 }
@@ -29,7 +29,7 @@ void listVector(vector<string> vec){
 
 bool yN(){
     char c;
-    cout<<"[y/N]\n"<<">>";
+    cout<<"[y/N]\n>>";
     cin>>c;
     c=tolower(c);
     if(c=='y') return 1;
