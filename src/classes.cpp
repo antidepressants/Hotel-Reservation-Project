@@ -78,7 +78,5 @@ double total(reservation res){
     date s=res.start,e=res.end;
     int days=(e.y-s.y)*365.25+(e.m-s.m)*30.43+(e.d-s.d);
     double total=days*res.r->price;
-    total+=total*tva;
-    total=(int)(total/0.01)*0.01;
-    return total;
+    return total + total*tva;
 }

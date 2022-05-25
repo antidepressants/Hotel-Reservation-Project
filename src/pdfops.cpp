@@ -1,6 +1,7 @@
 #include "globalvariables.h"
 #include <hpdf.h>
 #include <cstring>
+#include <string>
 using namespace std;
 
 void error_handler (HPDF_STATUS error_no, HPDF_STATUS detail_no, void *user_data) {
@@ -51,7 +52,9 @@ void exportTotal(user* u){
             strcpy(temp,tempStr.c_str());
             HPDF_Page_ShowText(page,temp);
             HPDF_Page_MoveTextPos(page,0,-20);
-            tempStr="Total: "+to_string(total(res))+"$";
+            string totalString=to_string(total(res));
+            totalString=totalString.substr(0,totalString.find(".")+3);
+            tempStr="Total: "+totalString+"$";
             strcpy(temp,tempStr.c_str());
             HPDF_Page_ShowText(page,temp);
             HPDF_Page_MoveTextPos(page,0,-50);
