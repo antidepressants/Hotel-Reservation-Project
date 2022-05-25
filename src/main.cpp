@@ -1,5 +1,4 @@
 #include "cli.h"
-#include <cstdlib>
 using namespace std;
 
 int main(){
@@ -7,7 +6,7 @@ int main(){
     string loginChoices[]={"Login","Register","Quit"};
     user* up=nullptr;
     while(true){
-        (windows)?system("cls"):system("clear");
+        sysClear();
         cout<<"\n-----Main Menu-----\n";
         switch (selectChoice(loginChoices,3)) {
         case 1:
@@ -17,21 +16,17 @@ int main(){
             addUser();
             break;
         case 3:
-            (windows)?system("cls"):system("clear");
+            sysClear();
             return 0;
         }
-        cout<<"\nPress enter to continue...";
-        string temp;
-        cin.clear();
-        cin.ignore(INT_MAX,'\n');
-        getline(cin,temp);
+        sysPause();
         sync();
         if(!fout) {
             cerr<<"Error writing to file!\n";
             return EXIT_FAILURE;
         }
         while(up){
-            (windows)?system("cls"):system("clear");
+            sysClear();
             if(up->ID==1) adminMenu(up);
             else clientMenu(up);
         }

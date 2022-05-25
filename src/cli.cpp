@@ -2,6 +2,9 @@
 #include "globalvariables.h"
 using namespace std;
 
+void sysPause(){(windows)?system("pause"):system("echo 'Press any button to continue...' && read");}
+void sysClear(){(windows)?system("cls"):system("clear");}
+
 user* login(){
     cout<<"\n-----Login-----\n";
     cout<<"Email Address\n";
@@ -104,11 +107,7 @@ void adminMenu(user*& u){
             cout<<"Invalid Option!\n";
             return adminMenu(u);
     }
-    cout<<"Press enter to continue...";
-    string temp;
-    cin.clear();
-    cin.ignore(INT_MAX,'\n');
-    getline(cin,temp);
+    sysPause();
     sync();
 }
 
@@ -150,11 +149,7 @@ void clientMenu(user*& u){
             cout<<"Invalid Option!\n";
             return clientMenu(u);
     }
-    cout<<"Press enter to continue...";
-    string temp;
-    cin.clear();
-    cin.ignore(INT_MAX,'\n');
-    getline(cin,temp);
+    sysPause();
     sync();
 }
 
@@ -181,7 +176,7 @@ void firstSetup(){
 }
 
 void start(){
-    (windows)?system("cls"):system("clear");
+    sysClear();
     cout<<"Loading data...\n";
     size_t s=fileSize("data/user.csv");
     if(!s) firstSetup();
