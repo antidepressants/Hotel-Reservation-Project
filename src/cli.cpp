@@ -1,4 +1,5 @@
 #include "cli.h"
+#include "algos.hpp"
 #include "globalvariables.h"
 using namespace std;
 
@@ -52,6 +53,11 @@ void adminMenu(user*& u){
             addToVector(features);
             break;
         case 3:
+            if(!features.size()){
+                cout<<"There are no features!\n";
+                break;
+            }
+            listVector(features);
             removeFromVector(features);
             break;
         case 4:
@@ -70,12 +76,22 @@ void adminMenu(user*& u){
             addToVector(locations);
             break;
         case 6:
+            if(!locations.size()){
+                cout<<"There are no locations!\n";
+                break;
+            }
+            listVector(locations);
             removeFromVector(locations);
             break;
         case 7:
             addToVector(types);
             break;
         case 8:
+            if(!types.size()){
+                cout<<"There are no types!\n";
+                break;
+            }
+            listVector(types);
             removeFromVector(types);
             break;
         case 9:
