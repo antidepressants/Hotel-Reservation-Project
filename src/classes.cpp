@@ -5,7 +5,8 @@ using namespace std;
 string date::info(){
         string s=to_string(d)+"-"+to_string(m)+"-"+to_string(y);
         return s;
-    }
+}
+
 void date::input(string str){
     stringstream s(str);
     string temp;
@@ -16,9 +17,11 @@ void date::input(string str){
     getline(s,temp);
     y=stoi(temp);
 }
+
 bool room::hasAdditionalFeatures(){
         return (additionalFeatures.size()!=0);
-    }
+}
+
 void room::displayInfo(){
     cout<<"\nRoom Number: "<<num;
     cout<<"\nAddress: "<<address;
