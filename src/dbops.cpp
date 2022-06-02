@@ -98,7 +98,12 @@ void sortRooms(){
         prices[i]=rVec[i].price;
     }
     compSort(prices,s);
-    for(size_t i=0;i<s;i++) swapT(rVec[i],rVec[findT(prices, s, rVec[i].price)]);
+    for(size_t i=0;i<s;i++){
+        size_t j=findT(prices, s, rVec[i].price);
+        if(j==-1)continue;
+        swapT(rVec[i],rVec[j]);
+        prices[j]=0;
+    }
     delete [] prices;
 }
 
@@ -109,7 +114,12 @@ void sortRes(){
         prices[i]=resVec[i].r->price;
     }
     compSort(prices,s);
-    for(size_t i=0;i<s;i++) swapT(resVec[i],resVec[findT(prices,s,resVec[i].r->price)]);
+        for(size_t i=0;i<s;i++){
+        size_t j=findT(prices, s, resVec[i].r->price);
+        if(j==-1)continue;
+        swapT(resVec[i],resVec[j]);
+        prices[j]=0;
+    }
     delete [] prices;
 }
 
